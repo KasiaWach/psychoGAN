@@ -1,1 +1,2 @@
 # psychoGAN
+Tutaj opisujemy rep
