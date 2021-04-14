@@ -1,5 +1,13 @@
 import sys
 import os
+import numpy as np
+import pandas as pd
+import PIL.Image
+from PIL import Image, ImageDraw
+import dnnlib
+import dnnlib.tflib as tflib
+import imageio
+import matplotlib.pyplot as plt
 sys.path.insert(0, os.getcwd()+"/stylegan2")
 from generator import generator
 def main():
@@ -7,7 +15,7 @@ def main():
                                direction_path="stylegan2/stylegan2directions/dominance.npy", coefficient=1.0,
                                truncation=0.7, n_levels=3, n_photos=10, type_of_preview="manipulation",
                                result_dir="/results")
-    plt.imshow(generator.__generate_preview_face_manip())
+    plt.imshow(generator._generator__generate_preview_face_manip())
 
 
 main()
