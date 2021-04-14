@@ -3,12 +3,12 @@ import numpy as np
 import pandas as pd
 import PIL.Image
 from PIL import Image, ImageDraw
-# import dnnlib
-# import dnnlib.tflib as tflib
+import dnnlib
+import dnnlib.tflib as tflib
 import imageio
 import matplotlib.pyplot as plt
 from pathlib import Path
-import pretrained_networks, dnnlib
+import pretrained_networks
 
 class generator():
     def __init__(self, network_pkl_path,direction_path,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir):
