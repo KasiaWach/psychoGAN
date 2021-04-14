@@ -15,6 +15,7 @@ def main():
                                result_dir="/results")
     main_generator.change_face()
     plt.imshow(main_generator._generator__generate_preview_face_manip())
+    plt.show()
 
 
 main()
