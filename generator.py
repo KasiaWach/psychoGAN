@@ -115,9 +115,8 @@ class generator():
         all_w[2][0:8] = (all_w[2] - self.coefficient * self.direction)[0:8]
 
         all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
-        images = [PIL.Image.fromarray(all_images[i], 'RGB') for i in range(3)]
 
-        return np.hstack(images)
+        return np.hstack(all_images)
 
     def __tile_vector(self, faces_w):
         """Przyjmuje listę 512-wymierowych wektorów twarzy i rozwija je w taki które przyjmuje generator"""
