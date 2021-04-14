@@ -23,6 +23,10 @@ class generator():
         self.synthesis_kwargs = {}              # Keyword arguments które przyjmuje stylegan
         self.type_of_preview = type_of_preview  # Typ podglądu, wartości: "3_faces", "manipulation" w zależności od tego które ustawienia są zmieniane
         self.result_dir = result_dir
+        import os
+        print(os.getcwd())
+        os.chdir("/stylegan2")
+        print(os.getcwd())
         self._G, self._D, self.Gs = pretrained_networks.load_networks(network_pkl_path)
 
     def refresh_preview(self):
