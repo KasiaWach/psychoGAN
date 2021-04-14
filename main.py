@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw
 import imageio
 import matplotlib.pyplot as plt
 from pathlib import Path
-import pretrained_networks
+from stylegan2 import pretrained_networks, dnnlib
 
 class generator():
     def __init__(self, network_pkl_path,direction_path,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir):
