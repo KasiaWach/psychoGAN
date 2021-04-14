@@ -13,7 +13,8 @@ def main():
                                direction_path="stylegan2/stylegan2directions/dominance.npy", coefficient=1.0,
                                truncation=0.7, n_levels=3, n_photos=10, type_of_preview="manipulation",
                                result_dir="/results")
-    plt.imshow(generator._generator__generate_preview_face_manip())
+    main_generator.change_face()
+    plt.imshow(main_generator._generator__generate_preview_face_manip())
 
 
 main()
