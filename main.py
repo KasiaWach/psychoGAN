@@ -14,8 +14,9 @@ def main():
                                truncation=0.7, n_levels=3, n_photos=10, type_of_preview="manipulation",
                                result_dir="/results")
     main_generator.change_face()
-    plt.imshow(main_generator._generator__generate_preview_face_manip())
-    plt.show()
+    main_generator._generator__kwargs()
+    Image.fromarray(main_generator._generator__generate_preview_face_manip(), "RGB").save('wynik.png')
+
 
 
 main()
