@@ -64,6 +64,9 @@ _cached_networks = dict()
 def load_networks(path_or_gdrive_path):
     import os
     print(os.getcwd())
+    os.chdir("/stylegan2")
+    print(os.getcwd())
+
     path_or_url = get_path_or_url(path_or_gdrive_path)
     if path_or_url in _cached_networks:
         return _cached_networks[path_or_url]
