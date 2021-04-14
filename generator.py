@@ -30,7 +30,7 @@ class generator():
         pass
 
     def change_face(self):
-        all_z = np.random.randn(1, *Gs.input_shape[1:])
+        all_z = np.random.randn(1, *self.Gs.input_shape[1:])
         all_w = self.__map_vectors(all_z)
         self.preview_face = self.__truncate_vectors(all_w)
 
