@@ -105,7 +105,7 @@ class generator():
 
     def __generate_preview_face_manip(self):
         """Zwraca PIL Image ze sklejonymi 3 twarzami w środku neutralna, po bokach zmanipulowana"""
-        all_w = self.__tile_vector(self.preview_face)  #Rozwinęcie wektor w 18 razy i wrzucenie na liste
+        all_w = self.preview_face  #Rozwinęcie wektor w 18 razy i wrzucenie na liste
         # generewanie losowej/losowych twarzy
 
         all_w = np.array([all_w[0],all_w[0],all_w[0]])  # Przygotowujemy miejsca na twarze zmanipulowane
@@ -114,10 +114,10 @@ class generator():
         all_w[0][0:8] = (all_w[0] + self.coefficient * self.direction)[0:8]
         all_w[2][0:8] = (all_w[2] - self.coefficient * self.direction)[0:8]
 
-        all_images = Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
+        all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
         images = [PIL.Image.fromarray(all_images[i], 'RGB') for i in range(3)]
 
-        return PIL.Image.hstack(images)
+        return np.hstack(images)
 
     def __tile_vector(self, faces_w):
         """Przyjmuje listę 512-wymierowych wektorów twarzy i rozwija je w taki które przyjmuje generator"""
