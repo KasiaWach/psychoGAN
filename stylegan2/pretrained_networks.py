@@ -7,8 +7,8 @@
 """List of pre-trained StyleGAN2 networks located on Google Drive."""
 
 import pickle
-import dnnlib
-from dnnlib import tflib
+from stylegan2 import dnnlib
+from stylegan2.dnnlib import tflib
 
 #----------------------------------------------------------------------------
 # StyleGAN2 Google Drive root: https://drive.google.com/open?id=1QHc-yF5C3DChRwSdZKcx1w6K8JvSxQi7
