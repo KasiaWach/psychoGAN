@@ -111,8 +111,8 @@ class generator():
         all_w = np.array([all_w[0],all_w[0],all_w[0]])  # Przygotowujemy miejsca na twarze zmanipulowane
 
          # przesunięcie twarzy o wektor (już rozwinięty w 18)
-        all_w[0][0:8] = (all_w[0] + self.coefficient * self.direction)[0:8]
-        all_w[2][0:8] = (all_w[2] - self.coefficient * self.direction)[0:8]
+        all_w[0][0:8] = (all_w[0] - self.coefficient * self.direction)[0:8]
+        all_w[2][0:8] = (all_w[2] + self.coefficient * self.direction)[0:8]
 
         all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
 
