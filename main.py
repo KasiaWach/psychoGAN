@@ -1,12 +1,12 @@
 import sys
 import os
+sys.path.insert(0, os.getcwd()+"/stylegan2")  #Pozwala importować rzeczy z folderu stylegan
 import numpy as np
 import pandas as pd
 import PIL.Image
 from PIL import Image, ImageDraw
 import imageio
 import matplotlib.pyplot as plt
-sys.path.insert(0, os.getcwd()+"/stylegan2")
 from generator import generator
 def main():
     main_generator = generator(network_pkl_path="gdrive:networks/stylegan2-ffhq-config-f.pkl",
