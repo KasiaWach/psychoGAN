@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw
 import imageio
 import matplotlib.pyplot as plt
 from pathlib import Path
-from stylegan2 import pretrained_networks, dnnlib
+from stylegan2 import load
 
 class generator():
     def __init__(self, network_pkl_path,direction_path,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir):
@@ -23,7 +23,7 @@ class generator():
         self.synthesis_kwargs = {}              # Keyword arguments które przyjmuje stylegan
         self.type_of_preview = type_of_preview  # Typ podglądu, wartości: "3_faces", "manipulation" w zależności od tego które ustawienia są zmieniane
         self.result_dir = result_dir
-        self._G, self._D, self.Gs = pretrained_networks.load_networks(network_pkl_path)
+        self._G, self._D, self.Gs = load.load(network_pkl_path)
 
     def refresh_preview(self):
         """Przełączniki co wywołać w zależności od wartości type_of_preview"""
