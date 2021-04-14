@@ -4,8 +4,6 @@ import numpy as np
 import pandas as pd
 import PIL.Image
 from PIL import Image, ImageDraw
-import dnnlib
-import dnnlib.tflib as tflib
 import imageio
 import matplotlib.pyplot as plt
 sys.path.insert(0, os.getcwd()+"/stylegan2")
