@@ -66,10 +66,10 @@ def load_networks(path_or_gdrive_path):
     if path_or_url in _cached_networks:
         return _cached_networks[path_or_url]
 
-    if dnnlib.util.is_url(path_or_url):
-        stream = dnnlib.util.open_url(path_or_url, cache_dir='.stylegan2-cache')
-    else:
-        stream = open(path_or_url, 'rb')
+    # if dnnlib.util.is_url(path_or_url):
+    #     # stream = dnnlib.util.open_url(path_or_url, cache_dir='.stylegan2-cache')
+    # else:
+    stream = open(path_or_url, 'rb')
 
     tflib.init_tf()
     with stream:
