@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import PIL.Image
 from PIL import Image, ImageDraw
+import cv2
 import dnnlib
 import dnnlib.tflib as tflib
 import imageio
@@ -105,8 +106,7 @@ class generator():
 
     def __generate_preview_face_manip(self):
         """Zwraca PIL Image ze sklejonymi 3 twarzami w środku neutralna, po bokach zmanipulowana"""
-        all_w = self.preview_face  #Rozwinęcie wektor w 18 razy i wrzucenie na liste
-        # generewanie losowej/losowych twarzy
+        all_w = self.preview_face
 
         all_w = np.array([all_w[0],all_w[0],all_w[0]])  # Przygotowujemy miejsca na twarze zmanipulowane
 
