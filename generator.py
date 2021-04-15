@@ -31,7 +31,7 @@ class generator():
         pass
 
     def change_face(self):
-        all_z = np.random.randn(1, *self.Gs.input_shape[1:])
+        all_z = np.random.randn(1 if type_of_preview=="manipulation" else 3, *self.Gs.input_shape[1:])
         all_w = self.__map_vectors(all_z)
         self.preview_face = self.__truncate_vectors(all_w)
 
@@ -105,12 +105,13 @@ class generator():
                         dlatent[0])
 
     def __generate_preview_face_manip(self):
-        """Zwraca PIL Image ze sklejonymi 3 twarzami w środku neutralna, po bokach zmanipulowana"""
-        all_w = self.preview_face
+        """Zwraca array ze zdjeciem, sklejonymi 3 twarzami: w środku neutralna, po bokach zmanipulowana"""
+        self.__set_synthesis_kwargs(minibatch_size=3)
+        all_w = self.preview_face.copy()
 
         all_w = np.array([all_w[0],all_w[0],all_w[0]])  # Przygotowujemy miejsca na twarze zmanipulowane
 
-         # przesunięcie twarzy o wektor (już rozwinięty w 18)
+        # Przesunięcie twarzy o wektor (już rozwinięty w 18)
         all_w[0][0:8] = (all_w[0] - self.coefficient * self.direction)[0:8]
         all_w[2][0:8] = (all_w[2] + self.coefficient * self.direction)[0:8]
 
@@ -135,10 +136,14 @@ class generator():
         w_avg = self.Gs.get_var('dlatent_avg')
         return w_avg + (faces_w - w_avg) * self.truncation
 
-    def __kwargs(self):  # Adam
-        Gs_syn_kwargs = dnnlib.EasyDict()
-        Gs_syn_kwargs.output_transform = dict(func=tflib.convert_images_to_uint8,
-                                              nchw_to_nhwc=True)
-        Gs_syn_kwargs.randomize_noise = False
-        Gs_syn_kwargs.minibatch_size = 1
-        self.synthesis_kwargs = Gs_syn_kwargs
+    def __set_synthesis_kwargs(self,minibatch_size = 3):
+        """Za pierwszym razem tworzy keyword arguments do gnereowania,
+        następnie może być użyta do zienienia minibatch_size"""
+        if len(self.synthesis_kwargs)==0:
+            Gs_syn_kwargs = dnnlib.EasyDict()
+            Gs_syn_kwargs.output_transform = dict(func=tflib.convert_images_to_uint8,
+                                                  nchw_to_nhwc=True)
+            Gs_syn_kwargs.randomize_noise = False
+            self.synthesis_kwargs = Gs_syn_kwargs
+
+        Gs_syn_kwargs.minibatch_size = minibatch_size
