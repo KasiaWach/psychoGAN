@@ -23,7 +23,7 @@ class generator():
         self.preview_3faces = np.array([])      # Array z koordynatami twarzy na podglądzie 3
         self.synthesis_kwargs = {}              # Keyword arguments które przyjmuje stylegan
         self.type_of_preview = type_of_preview  # Typ podglądu, wartości: "3_faces", "manipulation" w zależności od tego które ustawienia są zmieniane
-        self.result_dir = result_dir
+        self.result_dir = Path(result_dir)
         self._G, self._D, self.Gs = load_networks(network_pkl_path)
 
     def refresh_preview(self):
@@ -35,42 +35,28 @@ class generator():
         all_w = self.__map_vectors(all_z)
         self.preview_face = self.__truncate_vectors(all_w)
 
-    def generate(self):
+    def generate(self, minibatch_size):
         """Zapisuje wyniki, na razie n_levels=1 """
-        result_dir = Path(dnnlib.submit_config.run_dir_root)
-        output_dir = Path(output_dir)
 
-        if direction_path is not None:
-            direction = np.load(direction_path)
+        if self.direction_path is not None:
+            direction = self.direction
 
-        images_dir = result_dir / 'images'
-        dlatents_dir = result_dir / 'dlatents'
-        output_tsv = output_dir / 'out.tsv'
+        images_dir = self.result_dir / 'images'
+        dlatents_dir = self.result_dir / 'dlatents'
 
         images_dir.mkdir(exist_ok=True, parents=True)
         dlatents_dir.mkdir(exist_ok=True, parents=True)
-        output_dir.mkdir(exist_ok=True)
 
-        print('Loading networks from "%s"...' % network_pkl)
-        _G, _D, Gs = pretrained_networks.load_networks(network_pkl)
-        w_avg = Gs.get_var('dlatent_avg')
+        w_avg = self.Gs.get_var('dlatent_avg')
 
-        Gs_syn_kwargs = dnnlib.EasyDict()
-        Gs_syn_kwargs.output_transform = dict(func=tflib.convert_images_to_uint8,
-                                              nchw_to_nhwc=True)
-        Gs_syn_kwargs.randomize_noise = False
-        Gs_syn_kwargs.minibatch_size = minibatch_size
+        self.__set_synthesis_kwargs(minibatch_size)
 
-        latents_from = 0
-        latents_to = 8
 
         for i in tqdm(range(num // minibatch_size)):
-            all_z = np.random.randn(minibatch_size, *Gs.input_shape[1:])
-            all_w = Gs.components.mapping.run(all_z, None)
-            all_w = w_avg + (all_w - w_avg) * truncation_psi
+            all_w = self.preview_face.copy()
 
-            if direction_path is not None:
-                assert coeff is not None
+            if self.direction_path is not None:
+                assert self.coefficient is not None
                 pos_w = all_w.copy()
                 neg_w = all_w.copy()
 
