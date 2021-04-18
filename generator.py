@@ -37,13 +37,10 @@ class generator():
 
 
     def change_face(self):
-        self.preview_face = __create_coordinates(1 if type_of_preview=="manipulation" else 3)
+        self.preview_face = self.__create_coordinates(1 if self.type_of_preview=="manipulation" else 3)
 
     def generate(self, minibatch_size):
         """Zapisuje wyniki, na razie n_levels=1 """
-
-        if self.direction_path is not None:
-            direction = self.direction
 
         images_dir = self.result_dir / 'images'
         dlatents_dir = self.result_dir / 'dlatents'
@@ -51,13 +48,12 @@ class generator():
         images_dir.mkdir(exist_ok=True, parents=True)
         dlatents_dir.mkdir(exist_ok=True, parents=True)
 
-        w_avg = self.Gs.get_var('dlatent_avg')
 
         self.__set_synthesis_kwargs(minibatch_size)
 
 
-        for i in tqdm(range(num // minibatch_size)):
-            all_w = self.preview_face.copy()
+        for i in tqdm(range(self.n_photos // minibatch_size)): # dodajmy ładowanie w interfejsie :)
+            all_w = self.__create_coordinates(self.n_photos)
 
             if self.direction_path is not None:
                 assert self.coefficient is not None
@@ -65,28 +61,26 @@ class generator():
                 neg_w = all_w.copy()
 
                 for j in range(len(all_w)):
-                    pos_w[j][latents_from:latents_to] = \
-                        (pos_w[j] + coeff * direction)[latents_from:latents_to]
-                    neg_w[j][latents_from:latents_to] = \
-                        (neg_w[j] - coeff * direction)[latents_from:latents_to]
+                    pos_w[j][0:8] = (pos_w[j] + self.coefficient * self.direction)[0:8]
+                    neg_w[j][0:8] = (neg_w[j] - self.coefficient * self.direction)[0:8]
 
-                pos_images = Gs.components.synthesis.run(pos_w,
-                                                         **Gs_syn_kwargs)
-                neg_images = Gs.components.synthesis.run(neg_w,
-                                                         **Gs_syn_kwargs)
+                pos_images = self.Gs.components.synthesis.run(pos_w,
+                                                         **self.synthesis_kwargs)
+                neg_images = self.Gs.components.synthesis.run(neg_w,
+                                                         **self.synthesis_kwargs)
 
                 for j in range(len(all_w)):
                     pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB')
                     pos_image_pil.save(
                         images_dir / 'tr_{}_{}.png'.format(i * minibatch_size +
-                                                           j, coeff))
+                                                           j, self.coefficient))
 
                     neg_image_pil = PIL.Image.fromarray(neg_images[j], 'RGB')
                     neg_image_pil.save(
                         images_dir / 'tr_{}_-{}.png'.format(i * minibatch_size +
-                                                            j, coeff))
+                                                            j, self.coefficient))
 
-            all_images = Gs.components.synthesis.run(all_w, **Gs_syn_kwargs)
+            all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
 
             for j, (dlatent, image) in enumerate(zip(all_w, all_images)):
                 image_pil = PIL.Image.fromarray(image, 'RGB')
