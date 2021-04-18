@@ -42,43 +42,43 @@ class generator():
     def generate(self, minibatch_size):
         """Zapisuje wyniki, na razie n_levels=1 """
 
-        images_dir = self.result_dir / 'images'
+        images_dir = self.result_dir / 'images'         #Można się zastanowić czy nie zrobić z tego zmiennych obiektu, bo możliwe że będziemy się do nich częściej odnosić
         dlatents_dir = self.result_dir / 'dlatents'
 
         images_dir.mkdir(exist_ok=True, parents=True)
         dlatents_dir.mkdir(exist_ok=True, parents=True)
-
+        minibatch_size = 8 # Nie było zdefiniowane mini_batchsize
 
         self.__set_synthesis_kwargs(minibatch_size)
 
 
-        for i in tqdm(range(self.n_photos // minibatch_size)): # dodajmy ładowanie w interfejsie :)
-            all_w = self.__create_coordinates(self.n_photos)
+        for i in range(self.n_photos // minibatch_size): # dodajmy ładowanie w interfejsie :) /tqdm był do usunięcia
+            all_w = self.__create_coordinates(minibatch_size)
 
-            if self.direction_path is not None:
-                assert self.coefficient is not None
-                pos_w = all_w.copy()
-                neg_w = all_w.copy()
+            # error handing był tu niepotrzebny, mógł wywalić program, ale jak go dobrze napiszemy nie będzie potrzeby
 
-                for j in range(len(all_w)):
-                    pos_w[j][0:8] = (pos_w[j] + self.coefficient * self.direction)[0:8]
-                    neg_w[j][0:8] = (neg_w[j] - self.coefficient * self.direction)[0:8]
+            pos_w = all_w.copy()        #Będzie do dodania obsługiwanie kilku poziomów
+            neg_w = all_w.copy()
 
-                pos_images = self.Gs.components.synthesis.run(pos_w,
-                                                         **self.synthesis_kwargs)
-                neg_images = self.Gs.components.synthesis.run(neg_w,
-                                                         **self.synthesis_kwargs)
+            for j in range(len(all_w)):
+                pos_w[j][0:8] = (pos_w[j] + self.coefficient * self.direction)[0:8]
+                neg_w[j][0:8] = (neg_w[j] - self.coefficient * self.direction)[0:8]
 
-                for j in range(len(all_w)):
-                    pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB')
-                    pos_image_pil.save(
-                        images_dir / 'tr_{}_{}.png'.format(i * minibatch_size +
-                                                           j, self.coefficient))
+            pos_images = self.Gs.components.synthesis.run(pos_w,
+                                                     **self.synthesis_kwargs)
+            neg_images = self.Gs.components.synthesis.run(neg_w,
+                                                     **self.synthesis_kwargs)
 
-                    neg_image_pil = PIL.Image.fromarray(neg_images[j], 'RGB')
-                    neg_image_pil.save(
-                        images_dir / 'tr_{}_-{}.png'.format(i * minibatch_size +
-                                                            j, self.coefficient))
+            for j in range(len(all_w)):
+                pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB') #Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
+                pos_image_pil.save(
+                    images_dir / 'tr_{}_{}.png'.format(i * minibatch_size +
+                                                       j, self.coefficient))
+
+                neg_image_pil = PIL.Image.fromarray(neg_images[j], 'RGB')
+                neg_image_pil.save(
+                    images_dir / 'tr_{}_-{}.png'.format(i * minibatch_size +
+                                                        j, self.coefficient))
 
             all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
 
