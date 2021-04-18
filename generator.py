@@ -30,10 +30,14 @@ class generator():
         """Przełączniki co wywołać w zależności od wartości type_of_preview"""
         pass
 
-    def change_face(self):
-        all_z = np.random.randn(1 if type_of_preview=="manipulation" else 3, *self.Gs.input_shape[1:])
+    def __create_coordinates(self, n_photos):
+        all_z = np.random.randn(n_photos, *self.Gs.input_shape[1:])
         all_w = self.__map_vectors(all_z)
-        self.preview_face = self.__truncate_vectors(all_w)
+        return self.__truncate_vectors(all_w)
+
+
+    def change_face(self):
+        self.preview_face = __create_coordinates(1 if type_of_preview=="manipulation" else 3)
 
     def generate(self, minibatch_size):
         """Zapisuje wyniki, na razie n_levels=1 """
