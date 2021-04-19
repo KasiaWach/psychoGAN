@@ -39,7 +39,7 @@ class generator():
     def change_face(self):
         self.preview_face = self.__create_coordinates(1 if self.type_of_preview=="manipulation" else 3)
 
-    def generate(self, minibatch_size):
+    def generate(self):
         """Zapisuje wyniki, na razie n_levels=1 """
 
         images_dir = self.result_dir / 'images'         #Można się zastanowić czy nie zrobić z tego zmiennych obiektu, bo możliwe że będziemy się do nich częściej odnosić
