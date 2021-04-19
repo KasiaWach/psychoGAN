@@ -43,15 +43,15 @@ class generator():
             self.preview_3faces = self.__create_coordinates(3)
 
 
-    def generate(self, minibatch_size):
+    def generate(self):
         """Zapisuje wyniki, na razie n_levels=1 """
+        minibatch_size = 8
 
         images_dir = self.result_dir / 'images'         #Można się zastanowić czy nie zrobić z tego zmiennych obiektu, bo możliwe że będziemy się do nich częściej odnosić
         dlatents_dir = self.result_dir / 'dlatents'
 
         images_dir.mkdir(exist_ok=True, parents=True)
         dlatents_dir.mkdir(exist_ok=True, parents=True)
-        minibatch_size = 8 # Nie było zdefiniowane mini_batchsize
 
         self.__set_synthesis_kwargs(minibatch_size)
 
