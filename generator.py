@@ -53,7 +53,7 @@ class generator():
 
 
         for i in range(self.n_photos // minibatch_size): # dodajmy ładowanie w interfejsie :) /tqdm był do usunięcia
-            all_w = self.__create_coordinates(minibatch_size)
+            all_w = self.__create_coordinates(minibatch_size) #Tu było n_photos a powinno być minibatch_size bo pętla ma robić minibatch_size zdjęć za każdym razem
 
             # error handing był tu niepotrzebny, mógł wywalić program, ale jak go dobrze napiszemy nie będzie potrzeby
 
