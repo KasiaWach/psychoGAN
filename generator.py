@@ -37,7 +37,11 @@ class generator():
 
 
     def change_face(self):
-        self.preview_face = self.__create_coordinates(1 if self.type_of_preview=="manipulation" else 3)
+        if self.type_of_preview == "manipulation":
+            self.preview_face = self.__create_coordinates(1)
+        else:
+            self.preview_3faces = self.__create_coordinates(3)
+
 
     def generate(self, minibatch_size):
         """Zapisuje wyniki, na razie n_levels=1 """
@@ -103,12 +107,24 @@ class generator():
 
         return np.hstack(all_images)
 
+    def __generate_preview_face_face_3(self):
+        """__generate_preview_face_manip tylko że używa zmiennej preview_3faces zamiast preview_face"""
+        self.__set_synthesis_kwargs(minibatch_size=3)
+        all_w = self.preview_3faces.copy()
+
+        all_w = np.array([all_w[0],all_w[0],all_w[0]])  # Przygotowujemy miejsca na twarze zmanipulowane
+
+        # Przesunięcie twarzy o wektor (już rozwinięty w 18)
+        all_w[0][0:8] = (all_w[0] - self.coefficient * self.direction)[0:8]
+        all_w[2][0:8] = (all_w[2] + self.coefficient * self.direction)[0:8]
+
+        all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
+
+        return np.hstack(all_images)
+
     def __tile_vector(self, faces_w):
         """Przyjmuje listę 512-wymierowych wektorów twarzy i rozwija je w taki które przyjmuje generator"""
         return np.array([np.tile(face, (18, 1)) for face in faces_w])
-
-    def __generate_preview_face_face_3(self):
-        """__generate_preview_face_manip tylko że używa zmiennej preview_3faces zamist preview_face"""
 
     def __map_vectors(self, faces_z):
          """Przyjmuje array wektorów z koordynatami twarzy w Z-space, gdzie losowane są wektory,
