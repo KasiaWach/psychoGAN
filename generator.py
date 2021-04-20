@@ -103,6 +103,24 @@ class generator():
 
         return np.hstack(all_images)
 
+<<<<<<< HEAD
+=======
+    def __generate_preview_face_face_3(self):
+        """__generate_preview_face_manip tylko że używa zmiennej preview_3faces zamiast preview_face"""
+        self.__set_synthesis_kwargs(minibatch_size=3)
+        all_w = self.preview_3faces.copy()
+
+        all_w = np.array([all_w[0],all_w[0],all_w[0]])  # Przygotowujemy miejsca na twarze zmanipulowane
+
+        # Przesunięcie twarzy o wektor (już rozwinięty w 18)
+        all_w[0][0:8] = (all_w[0] - self.coefficient * self.direction)[0:8]
+        all_w[2][0:8] = (all_w[2] + self.coefficient * self.direction)[0:8]
+
+        all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
+
+        return np.hstack(all_images)
+
+>>>>>>> parent of d4a845a (Update generator.py)
     def __tile_vector(self, faces_w):
         """Przyjmuje listę 512-wymierowych wektorów twarzy i rozwija je w taki które przyjmuje generator"""
         return np.array([np.tile(face, (18, 1)) for face in faces_w])
