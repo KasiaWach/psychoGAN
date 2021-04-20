@@ -62,7 +62,8 @@ class generator():
             all_w = self.__create_coordinates(minibatch_size)
 
             # error handing był tu niepotrzebny, mógł wywalić program, ale jak go dobrze napiszemy nie będzie potrzeby
-
+            for i in coeff:
+                
             pos_w = all_w.copy()        #Będzie do dodania obsługiwanie kilku poziomów
             neg_w = all_w.copy()
 
