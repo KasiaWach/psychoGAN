@@ -52,7 +52,7 @@ class generator():
         self.__set_synthesis_kwargs(minibatch_size)
 
 
-        for i in range(self.n_photos // minibatch_size): # dodajmy ładowanie w interfejsie :) /tqdm był do usunięcia
+        for i in range(self.n_photos // minibatch_size +1): # dodajmy ładowanie w interfejsie :) /tqdm był do usunięcia
             all_w = self.__create_coordinates(minibatch_size)
 
             # error handing był tu niepotrzebny, mógł wywalić program, ale jak go dobrze napiszemy nie będzie potrzeby
@@ -72,7 +72,7 @@ class generator():
             for j in range(len(all_w)):
                 pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB') #Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
                 pos_image_pil.save(
-                    images_dir / 'tr_{}_{}.png'.format(i * minibatch_size +
+                    images_dir / '{}cond{}.png'.format(i * minibatch_size +
                                                        j, self.coefficient))
 
                 neg_image_pil = PIL.Image.fromarray(neg_images[j], 'RGB')
@@ -103,8 +103,6 @@ class generator():
 
         return np.hstack(all_images)
 
-<<<<<<< HEAD
-=======
     def __generate_preview_face_face_3(self):
         """__generate_preview_face_manip tylko że używa zmiennej preview_3faces zamiast preview_face"""
         self.__set_synthesis_kwargs(minibatch_size=3)
@@ -120,7 +118,6 @@ class generator():
 
         return np.hstack(all_images)
 
->>>>>>> parent of d4a845a (Update generator.py)
     def __tile_vector(self, faces_w):
         """Przyjmuje listę 512-wymierowych wektorów twarzy i rozwija je w taki które przyjmuje generator"""
         return np.array([np.tile(face, (18, 1)) for face in faces_w])
