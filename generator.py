@@ -23,7 +23,9 @@ class generator():
         self.preview_3faces = np.array([])      # Array z koordynatami twarzy na podglądzie 3
         self.synthesis_kwargs = {}              # Keyword arguments które przyjmuje stylegan
         self.type_of_preview = type_of_preview  # Typ podglądu, wartości: "3_faces", "manipulation" w zależności od tego które ustawienia są zmieniane
-        self.result_dir = Path(result_dir)
+        self.dir = {"results":Path(result_dir),
+                    "images":Path(result_dir) / 'images',
+                    "coordinates":Path(result_dir) / 'coordinates'}
         self._G, self._D, self.Gs = load_networks(network_pkl_path)
 
     def refresh_preview(self):
@@ -37,7 +39,19 @@ class generator():
 
 
     def change_face(self):
-        self.preview_face = self.__create_coordinates(1 if self.type_of_preview=="manipulation" else 3)
+        if self.type_of_preview == "manipulation":
+            self.preview_face = self.__create_coordinates(1)
+        else:
+            self.preview_3faces = self.__create_coordinates(3)
+
+    def __save_image(self, face, face_no, condition):
+        pos_image_pil = PIL.Image.fromarray(pos_images[j],
+                                            'RGB')  # Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
+        pos_image_pil.save(
+            images_dir / '{}cond{}.png'.format(i * minibatch_size +
+                                               j, self.coefficient))
+
+        pass
 
     def generate(self):
         """Zapisuje wyniki, na razie n_levels=1 """
@@ -109,12 +123,6 @@ class generator():
         """__generate_preview_face_manip tylko że używa zmiennej preview_3faces zamiast preview_face"""
         self.__set_synthesis_kwargs(minibatch_size=3)
         all_w = self.preview_3faces.copy()
-
-        all_w = np.array([all_w[0],all_w[0],all_w[0]])  # Przygotowujemy miejsca na twarze zmanipulowane
-
-        # Przesunięcie twarzy o wektor (już rozwinięty w 18)
-        all_w[0][0:8] = (all_w[0] - self.coefficient * self.direction)[0:8]
-        all_w[2][0:8] = (all_w[2] + self.coefficient * self.direction)[0:8]
 
         all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
 
