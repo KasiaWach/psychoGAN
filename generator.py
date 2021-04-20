@@ -47,21 +47,15 @@ class generator():
             self.preview_3faces = self.__create_coordinates(3)
 
     def __save_image(self, face, face_no, condition):
-        pos_image_pil = PIL.Image.fromarray(pos_images[j],
-                                            'RGB')  # Można pomyśleć nad funkcją zapisującą obrazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
+        pos_image_pil = PIL.Image.fromarray(face,  'RGB')  # Można pomyśleć nad funkcją zapisującą
+        # obrazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
         pos_image_pil.save(
-            images_dir / '{}cond{}.png'.format(i * minibatch_size +
+            self.dir["images"] / '{}cond{}.png'.format(i * minibatch_size +
                                                j, self.coefficient))
 
 
     def generate(self):
         """Zapisuje wyniki, na razie n_levels=1 """
-
-        images_dir = self.result_dir / 'images'   #Można się zastanowić czy nie zrobić z tego zmiennych obiektu, bo możliwe że będziemy się do nich częściej odnosić
-        dlatents_dir = self.result_dir / 'dlatents'
-
-        images_dir.mkdir(exist_ok=True, parents=True)
-        dlatents_dir.mkdir(exist_ok=True, parents=True)
         minibatch_size = 8 # Nie było zdefiniowane mini_batchsize
 
         self.__set_synthesis_kwargs(minibatch_size)
@@ -89,20 +83,20 @@ class generator():
             for j in range(len(all_w)):
                 pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB') #Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
                 pos_image_pil.save(
-                    images_dir / '{}cond{}.png'.format(i * minibatch_size +
+                    self.dir["images"]  / '{}cond{}.png'.format(i * minibatch_size +
                                                        j, self.coefficient))
 
                 neg_image_pil = PIL.Image.fromarray(neg_images[j], 'RGB')
                 neg_image_pil.save(
-                    images_dir / 'tr_{}_-{}.png'.format(i * minibatch_size +
+                    self.dir["images"] / 'tr_{}_-{}.png'.format(i * minibatch_size +
                                                         j, self.coefficient))
 
             all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
 
             for j, (dlatent, image) in enumerate(zip(all_w, all_images)):
                 image_pil = PIL.Image.fromarray(image, 'RGB')
-                image_pil.save(images_dir / (str(i * minibatch_size + j) + '.png'))
-                np.save(dlatents_dir / (str(i * minibatch_size + j) + '.npy'),
+                image_pil.save(self.dir["images"] / (str(i * minibatch_size + j) + '.png'))
+                np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'),
                         dlatent[0])
 
     def __generate_preview_face_manip(self):
