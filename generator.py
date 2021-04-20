@@ -51,13 +51,14 @@ class generator():
 
         self.__set_synthesis_kwargs(minibatch_size)
 
+        coeff = np.arange(self.n_levels*self.coefficient*(-1),self.n_levels*self.coefficient, self.coefficient)
 
         for i in range(self.n_photos // minibatch_size +1): # dodajmy ładowanie w interfejsie :) /tqdm był do usunięcia
             all_w = self.__create_coordinates(minibatch_size)
 
             # error handing był tu niepotrzebny, mógł wywalić program, ale jak go dobrze napiszemy nie będzie potrzeby
-            for i in coeff:
-                
+            for i in coeff: 
+
             pos_w = all_w.copy()        #Będzie do dodania obsługiwanie kilku poziomów
             neg_w = all_w.copy()
 
