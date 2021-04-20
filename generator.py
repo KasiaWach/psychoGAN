@@ -37,31 +37,26 @@ class generator():
 
 
     def change_face(self):
-        if self.type_of_preview == "manipulation":
-            self.preview_face = self.__create_coordinates(1)
-        else:
-            self.preview_3faces = self.__create_coordinates(3)
-
-    def __save_image(self, face, face_no, condition):
-        pass
+        self.preview_face = self.__create_coordinates(1 if self.type_of_preview=="manipulation" else 3)
 
     def generate(self):
         """Zapisuje wyniki, na razie n_levels=1 """
-        minibatch_size = 8
 
         images_dir = self.result_dir / 'images'         #Można się zastanowić czy nie zrobić z tego zmiennych obiektu, bo możliwe że będziemy się do nich częściej odnosić
         dlatents_dir = self.result_dir / 'dlatents'
 
         images_dir.mkdir(exist_ok=True, parents=True)
         dlatents_dir.mkdir(exist_ok=True, parents=True)
+        minibatch_size = 8 # Nie było zdefiniowane mini_batchsize
 
         self.__set_synthesis_kwargs(minibatch_size)
 
-        for i in range(self.n_photos // minibatch_size + 1): # dodajmy ładowanie w interfejsie :) /tqdm był do usunięcia
-            all_w = self.__create_coordinates(minibatch_size) #Tu było n_photos a powinno być minibatch_size bo pętla ma robić minibatch_size zdjęć za każdym razem
+
+        for i in range(self.n_photos // minibatch_size): # dodajmy ładowanie w interfejsie :) /tqdm był do usunięcia
+            all_w = self.__create_coordinates(minibatch_size)
 
             # error handing był tu niepotrzebny, mógł wywalić program, ale jak go dobrze napiszemy nie będzie potrzeby
-            #for [coeff, coeff/2, 0, ..]:
+
             pos_w = all_w.copy()        #Będzie do dodania obsługiwanie kilku poziomów
             neg_w = all_w.copy()
 
@@ -77,7 +72,7 @@ class generator():
             for j in range(len(all_w)):
                 pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB') #Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
                 pos_image_pil.save(
-                    images_dir / '{}cond{}.png'.format(i * minibatch_size +
+                    images_dir / 'tr_{}_{}.png'.format(i * minibatch_size +
                                                        j, self.coefficient))
 
                 neg_image_pil = PIL.Image.fromarray(neg_images[j], 'RGB')
@@ -108,24 +103,12 @@ class generator():
 
         return np.hstack(all_images)
 
-    def __generate_preview_3faces(self):
-        """__generate_preview_face_manip tylko że używa zmiennej preview_3faces zamiast preview_face"""
-        self.__set_synthesis_kwargs(minibatch_size=3)
-        all_w = self.preview_3faces.copy()
-
-        all_w = np.array([all_w[0],all_w[0],all_w[0]])  # Przygotowujemy miejsca na twarze zmanipulowane
-
-        # Przesunięcie twarzy o wektor (już rozwinięty w 18)
-        all_w[0][0:8] = (all_w[0] - self.coefficient * self.direction)[0:8]
-        all_w[2][0:8] = (all_w[2] + self.coefficient * self.direction)[0:8]
-
-        all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
-
-        return np.hstack(all_images)
-
     def __tile_vector(self, faces_w):
         """Przyjmuje listę 512-wymierowych wektorów twarzy i rozwija je w taki które przyjmuje generator"""
         return np.array([np.tile(face, (18, 1)) for face in faces_w])
+
+    def __generate_preview_face_face_3(self):
+        """__generate_preview_face_manip tylko że używa zmiennej preview_3faces zamist preview_face"""
 
     def __map_vectors(self, faces_z):
          """Przyjmuje array wektorów z koordynatami twarzy w Z-space, gdzie losowane są wektory,
