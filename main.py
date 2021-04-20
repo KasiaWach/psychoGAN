@@ -11,11 +11,11 @@ from generator import generator
 def main():
     main_generator = generator(network_pkl_path="gdrive:networks/stylegan2-ffhq-config-f.pkl",
                                direction_path="stylegan2/stylegan2directions/dominance.npy", coefficient=1.5,
-                               truncation=0.6, n_levels=3, n_photos=10, type_of_preview="3_faces",
+                               truncation=0.6, n_levels=3, n_photos=10, type_of_preview="manipulation",
                                result_dir="results")
     main_generator.change_face()
-    Image.fromarray(main_generator._generator__generate_preview_3faces(), "RGB").save('wynik.jpg', format='JPEG', subsampling=0, quality=50)
-    # main_generator.generate()
+    # Image.fromarray(main_generator._generator__generate_preview_face_manip(), "RGB").save('wynik.jpg', format='JPEG', subsampling=0, quality=50)
+    main_generator.generate()
 
 
 main()
