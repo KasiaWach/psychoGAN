@@ -37,7 +37,13 @@ class generator():
 
 
     def change_face(self):
-        self.preview_face = self.__create_coordinates(1 if self.type_of_preview=="manipulation" else 3)
+        if self.type_of_preview == "manipulation":
+            self.preview_face = self.__create_coordinates(1)
+        else:
+            self.preview_3faces = self.__create_coordinates(3)
+
+    def __save_image(self, face, face_no, condition):
+        pass
 
     def generate(self):
         """Zapisuje wyniki, na razie n_levels=1 """
