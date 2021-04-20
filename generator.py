@@ -108,7 +108,7 @@ class generator():
 
         return np.hstack(all_images)
 
-    def __generate_preview_face_face_3(self):
+    def __generate_preview_3faces(self):
         """__generate_preview_face_manip tylko że używa zmiennej preview_3faces zamiast preview_face"""
         self.__set_synthesis_kwargs(minibatch_size=3)
         all_w = self.preview_3faces.copy()
