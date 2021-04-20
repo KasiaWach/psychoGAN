@@ -26,6 +26,8 @@ class generator():
         self.dir = {"results":Path(result_dir),
                     "images":Path(result_dir) / 'images',
                     "coordinates":Path(result_dir) / 'coordinates'}
+        for directory in self.dir.values():
+            directory.mkdir(exist_ok=True, parents=True)
         self._G, self._D, self.Gs = load_networks(network_pkl_path)
 
     def refresh_preview(self):
@@ -46,17 +48,16 @@ class generator():
 
     def __save_image(self, face, face_no, condition):
         pos_image_pil = PIL.Image.fromarray(pos_images[j],
-                                            'RGB')  # Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
+                                            'RGB')  # Można pomyśleć nad funkcją zapisującą obrazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
         pos_image_pil.save(
             images_dir / '{}cond{}.png'.format(i * minibatch_size +
                                                j, self.coefficient))
 
-        pass
 
     def generate(self):
         """Zapisuje wyniki, na razie n_levels=1 """
 
-        images_dir = self.result_dir / 'images'         #Można się zastanowić czy nie zrobić z tego zmiennych obiektu, bo możliwe że będziemy się do nich częściej odnosić
+        images_dir = self.result_dir / 'images'   #Można się zastanowić czy nie zrobić z tego zmiennych obiektu, bo możliwe że będziemy się do nich częściej odnosić
         dlatents_dir = self.result_dir / 'dlatents'
 
         images_dir.mkdir(exist_ok=True, parents=True)
