@@ -55,9 +55,10 @@ class generator():
 
     def __save_image(self, face, face_no, condition):   #Dodać kilka folderów wynikowych
         image_pil = PIL.Image.fromarray(face,  'RGB')
+        thumb = image_pil.thumbnail((256,256))
         image_pil.save(
         self.dir["images"] / '{}{}cond{}.png'.format(face_no, self.direction_name,condition))
-        image_pil.thumbnail((256,256), Image.ANTIALIAS).save(
+        thumb.save(
         self.dir["thumbnails"] / '{}{}cond{}.png'.format(face_no, self.direction_name,condition))
 
 
