@@ -76,24 +76,14 @@ class generator():
                 for j in range(len(all_w)):
                     manip_w[j][0:8] = (manip_w[j] + k * self.direction)[0:8]
 
-                manip_images = self.Gs.components.synthesis.run(manip_w,
-                                                     **self.synthesis_kwargs)
+                manip_images = self.Gs.components.synthesis.run(manip_w, **self.synthesis_kwargs)
 
                 for j in range(len(all_w)):
-                    self.__save_image(pos_images[j])
-                    #pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB') #Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
-                    #pos_image_pil.save(
-                            #self.dir["images"]  / '{}cond{}.png'.format(i * minibatch_size +
-                                                           #j, self.coefficient))
-
                     if i*minibatch_size + j < self.n_photos:
                         self.__save_image(manip_images[j])
 
-            for j, (dlatent, image) in enumerate(zip(all_w, all_images)):
-                #image_pil = PIL.Image.fromarray(image, 'RGB')
-                #image_pil.save(self.dir["images"] / (str(i * minibatch_size + j) + '.png'))
-                np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'),
-                    dlatent[0])
+            for j, (dlatent) in enumerate(all_w):
+                np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
 
     def __generate_preview_face_manip(self):
         """Zwraca array ze zdjeciem, sklejonymi 3 twarzami: w środku neutralna, po bokach zmanipulowana"""
