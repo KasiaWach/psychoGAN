@@ -77,16 +77,14 @@ class generator():
                 for j in range(len(all_w)):
                     manip_w[j][0:8] = (manip_w[j] + k * self.direction)[0:8]
 
-                manip_images = self.Gs.components.synthesis.run(manip_w,
-                                                     **self.synthesis_kwargs)
+                manip_images = self.Gs.components.synthesis.run(manip_w, **self.synthesis_kwargs)
 
                 for j in range(len(all_w)):
                     if i*minibatch_size + j < self.n_photos:
                         self.__save_image(manip_images[j])
 
             for j, (dlatent) in enumerate(all_w):
-                np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'),
-                    dlatent[0])
+                np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
 
     def __generate_preview_face_manip(self):
         """Zwraca array ze zdjeciem, sklejonymi 3 twarzami: w środku neutralna, po bokach zmanipulowana"""
