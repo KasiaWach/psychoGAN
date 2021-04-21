@@ -72,7 +72,7 @@ class generator():
         for i in range(self.n_photos // minibatch_size +1): # dodajmy ładowanie w interfejsie
             all_w = self.__create_coordinates(minibatch_size)
 
-            for k, coeff in coeffs:
+            for k, coeff in enumerate(coeffs):
                 manip_w = all_w.copy()
 
                 for j in range(len(all_w)):
