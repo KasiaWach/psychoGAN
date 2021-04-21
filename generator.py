@@ -90,7 +90,7 @@ class generator():
                     if i*minibatch_size + j < self.n_photos:
                         self.__save_image(manip_images[j])
 
-            for j, (dlatent, image) in enumerate(zip(all_w, all_images)):
+            for j, (dlatent) in enumerate(all_w):
                 #image_pil = PIL.Image.fromarray(image, 'RGB')
                 #image_pil.save(self.dir["images"] / (str(i * minibatch_size + j) + '.png'))
                 np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'),
