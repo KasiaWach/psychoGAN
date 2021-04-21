@@ -35,11 +35,15 @@ class generator():
         self._G, self._D, self.Gs = load_networks(network_pkl_path)
 
     @property
-    def direction_name(self): return self.direction_name
+    def direction_name(self): return self.__direction_name
     @direction_name.setter
+<<<<<<< HEAD
     def direction_name(self, direction_name):
         self.direction_name = direction_name.lower()
         self.direction = np.load(self.dir[self.direction_name])
+=======
+    def direction_name(self, direction_name): self.__direction_name = direction_name.lower()
+>>>>>>> a36fa38af97eadbb32d8b0d4593df7d5f8c8a13a
 
     def refresh_preview(self):
         """Przełączniki co wywołać w zależności od wartości type_of_preview"""
