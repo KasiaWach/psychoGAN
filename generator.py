@@ -12,7 +12,7 @@ from pathlib import Path
 from pretrained_networks import load_networks
 
 class generator():
-    def __init__(self, network_pkl_path,direction_name,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir,generator_number):
+    def __init__(self, network_pkl_path,direction_name,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir,generator_number=1):
         self.no_generator = generator_number
         self.coefficient = coefficient          # Siła manipluacji / przemnożenie wektora
         self.truncation = truncation            # Parametr stylegan "jak różnorodne twarze"
@@ -29,9 +29,9 @@ class generator():
                     "dominance":        Path("stylegan2/stylegan2directions/dominance.npy"),
                     "trustworthiness":  Path("stylegan2/stylegan2directions/trustworthiness.npy")}
         self.direction_name = direction_name.lower()            # Wybrany wymiar
-        self.direction = np.load(self.dir["direction_name"])    # Wgrany wektor cechy
+        self.direction = np.load(self.dir[self.direction_name])    # Wgrany wektor cechy
         for directory in self.dir.values():
-            directory.mkdir(exist_ok=True, parents=True)
+            if directory.suffix == "": directory.mkdir(exist_ok=True, parents=True)
         self._G, self._D, self.Gs = load_networks(network_pkl_path)
 
     def refresh_preview(self):
@@ -71,7 +71,6 @@ class generator():
             all_w = self.__create_coordinates(minibatch_size)
 
             for k in coeff:
-
                 manip_w = all_w.copy()
 
                 for j in range(len(all_w)):
