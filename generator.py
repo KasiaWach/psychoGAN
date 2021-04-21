@@ -59,8 +59,7 @@ class generator():
 
         self.__set_synthesis_kwargs(minibatch_size)
 
-        coef = np.arange(self.n_levels*self.coefficient*(-1),self.n_levels*self.coefficient, self.coefficient)
-        # n_levels = 0 => 1 rzecz na liście, n_levels = 1 =>3 rzeczy etc
+        coef = [i/self.n_levels*self.coefficient for i in range(-self.n_levels, self.n_levels)]
         coeff = coef/(self.n_levels)
 
         for i in range(self.n_photos // minibatch_size +1): # dodajmy ładowanie w interfejsie
