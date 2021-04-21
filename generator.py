@@ -68,21 +68,17 @@ class generator():
 
             for k in coeff:
 
-                pos_w = all_w.copy()
+                manip_w = all_w.copy()
 
                 for j in range(len(all_w)):
-                    pos_w[j][0:8] = (pos_w[j] + k * self.direction)[0:8]
+                    manip_w[j][0:8] = (manip_w[j] + k * self.direction)[0:8]
 
-                neg_images = self.Gs.components.synthesis.run(neg_w,
+                manip_images = self.Gs.components.synthesis.run(manip_w,
                                                      **self.synthesis_kwargs)
 
                 for j in range(len(all_w)):
-                    self.__save_image(pos_images[j])
-                    #pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB') #Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
-                    #pos_image_pil.save(
-                        #self.dir["images"]  / '{}cond{}.png'.format(i * minibatch_size +
-                                                       #j, self.coefficient))
-
+                    if i*minibatch_size + j < self.n_photos:
+                        self.__save_image(manip_images[j])
 
             for j, (dlatent, image) in enumerate(zip(all_w, all_images)):
                 #image_pil = PIL.Image.fromarray(image, 'RGB')
