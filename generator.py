@@ -82,21 +82,24 @@ class generator():
                                                      **self.synthesis_kwargs)
 
                 for j in range(len(all_w)):
-                    pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB') #Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
-                    pos_image_pil.save(
-                        self.dir["images"]  / '{}cond{}.png'.format(i * minibatch_size +
+                    self.__save_image(pos_images[j])
+                    self.__save_image(neg_images[j])
+                    #pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB') #Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
+                    #pos_image_pil.save(
+                        #self.dir["images"]  / '{}cond{}.png'.format(i * minibatch_size +
                                                        j, self.coefficient))
 
-                    neg_image_pil = PIL.Image.fromarray(neg_images[j], 'RGB')
-                    neg_image_pil.save(
-                        self.dir["images"] / '{}cond{}.png'.format(i * minibatch_size +
+                    #neg_image_pil = PIL.Image.fromarray(neg_images[j], 'RGB')
+                    #neg_image_pil.save(
+                        #self.dir["images"] / '{}cond{}.png'.format(i * minibatch_size +
                                                         j, self.coefficient))
 
                 all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
 
                 for j, (dlatent, image) in enumerate(zip(all_w, all_images)):
-                    image_pil = PIL.Image.fromarray(image, 'RGB')
-                    image_pil.save(self.dir["images"] / (str(i * minibatch_size + j) + '.png'))
+                    self.__save_image(image)
+                    #image_pil = PIL.Image.fromarray(image, 'RGB')
+                    #image_pil.save(self.dir["images"] / (str(i * minibatch_size + j) + '.png'))
                     np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'),
                         dlatent[0])
 
