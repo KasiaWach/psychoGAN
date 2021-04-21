@@ -55,7 +55,7 @@ class generator():
 
     def generate(self):
         """Zapisuje wyniki, na razie n_levels=1 """
-        minibatch_size = 8 # Nie było zdefiniowane mini_batchsize
+        minibatch_size = 8
 
         self.__set_synthesis_kwargs(minibatch_size)
 
@@ -63,7 +63,7 @@ class generator():
         # n_levels = 0 => 1 rzecz na liście, n_levels = 1 =>3 rzeczy etc
         coeff = coef/(self.n_levels)
 
-        for i in range(self.n_photos // minibatch_size +1): # dodajmy ładowanie w interfejsie :) /tqdm był do usunięcia
+        for i in range(self.n_photos // minibatch_size +1): # dodajmy ładowanie w interfejsie
             all_w = self.__create_coordinates(minibatch_size)
 
             for k in coeff:
