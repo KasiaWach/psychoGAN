@@ -34,8 +34,10 @@ class generator():
             if directory.suffix == "": directory.mkdir(exist_ok=True, parents=True)
         self._G, self._D, self.Gs = load_networks(network_pkl_path)
 
-    def __get_direction_name(self): return self.direction_name
-    def __set_dierction_name(self, direction_name): self.direction_name = direction_name.lower()
+    @property
+    def direction_name(self): return self.direction_name
+    @direction_name.setter
+    def direction_name(self, direction_name): self.direction_name = direction_name.lower()
 
     def refresh_preview(self):
         """Przełączniki co wywołać w zależności od wartości type_of_preview"""
@@ -55,10 +57,11 @@ class generator():
 
     def __save_image(self, face, face_no, condition):   #Dodać kilka folderów wynikowych
         image_pil = PIL.Image.fromarray(face,  'RGB')
-        thumb = image_pil.thumbnail((256,256))
         image_pil.save(
         self.dir["images"] / '{}{}cond{}.png'.format(face_no, self.direction_name,condition))
-        thumb.save(
+
+        image_pil.thumbnail((256,256))
+        image_pil.save(
         self.dir["thumbnails"] / '{}{}cond{}.png'.format(face_no, self.direction_name,condition))
 
 
