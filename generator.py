@@ -34,9 +34,14 @@ class generator():
             if directory.suffix == "": directory.mkdir(exist_ok=True, parents=True)
         self._G, self._D, self.Gs = load_networks(network_pkl_path)
 
+<<<<<<< HEAD
     def __get_direction_name(self): return self.direction_name
     def __set_dierction_name(self, direction_name): self.direction_name = direction_name.lower()
 
+=======
+
+    # Setter do direction,
+>>>>>>> 9857964e32be3ee4c6de9c3ba5c333e74577e00a
     def refresh_preview(self):
         """Przełączniki co wywołać w zależności od wartości type_of_preview"""
         pass
@@ -68,22 +73,22 @@ class generator():
 
         self.__set_synthesis_kwargs(minibatch_size)
 
-        coeff = [i/self.n_levels*self.coefficient for i in range(-self.n_levels, self.n_levels)]
+        coeffs = [i/self.n_levels*self.coefficient for i in range(-self.n_levels, self.n_levels)]
 
         for i in range(self.n_photos // minibatch_size +1): # dodajmy ładowanie w interfejsie
             all_w = self.__create_coordinates(minibatch_size)
 
-            for k in coeff:
+            for k, coeff in enumerate(coeffs):
                 manip_w = all_w.copy()
 
                 for j in range(len(all_w)):
-                    manip_w[j][0:8] = (manip_w[j] + k * self.direction)[0:8]
+                    manip_w[j][0:8] = (manip_w[j] + coeff * self.direction)[0:8]
 
                 manip_images = self.Gs.components.synthesis.run(manip_w, **self.synthesis_kwargs)
 
                 for j in range(len(all_w)):
                     if i*minibatch_size + j < self.n_photos:
-                        self.__save_image(manip_images[j])
+                        self.__save_image(manip_images[j],i*minibatch_size+j, k)
 
             for j, (dlatent) in enumerate(all_w):
                 np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
