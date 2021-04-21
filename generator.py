@@ -23,9 +23,9 @@ class generator():
         self.preview_3faces = np.array([])      # Array z koordynatami twarzy na podglądzie 3
         self.synthesis_kwargs = {}              # Keyword arguments które przyjmuje stylegan
         self.type_of_preview = type_of_preview  # Typ podglądu, wartości: "3_faces", "manipulation" w zależności od tego które ustawienia są zmieniane
-        self.dir = {"results":Path(result_dir),
-                    "images":Path(result_dir) / 'images',
-                    "coordinates":Path(result_dir) / 'coordinates'}
+        self.dir = {"results":      Path(result_dir),
+                    "images":       Path(result_dir) / 'images',
+                    "coordinates":  Path(result_dir) / 'coordinates'}
         for directory in self.dir.values():
             directory.mkdir(exist_ok=True, parents=True)
         self._G, self._D, self.Gs = load_networks(network_pkl_path)
@@ -50,8 +50,7 @@ class generator():
         pos_image_pil = PIL.Image.fromarray(face,  'RGB')  # Można pomyśleć nad funkcją zapisującą
         # obrazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
         pos_image_pil.save(
-            self.dir["images"] / '{}cond{}.png'.format(i * minibatch_size +
-                                               j, self.coefficient))
+            self.dir["images"] / '{}cond{}.png'.format(face_no, condition))
 
 
     def generate(self):
