@@ -83,17 +83,14 @@ class generator():
                                                      **self.synthesis_kwargs)
 
                 for j in range(len(all_w)):
-<<<<<<< HEAD
                     self.__save_image(pos_images[j])
                     #pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB') #Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
                     #pos_image_pil.save(
                             #self.dir["images"]  / '{}cond{}.png'.format(i * minibatch_size +
                                                            #j, self.coefficient))
 
-=======
                     if i*minibatch_size + j < self.n_photos:
                         self.__save_image(manip_images[j])
->>>>>>> 020d04758f52496c3ff325e20015f459029a79ce
 
             for j, (dlatent, image) in enumerate(zip(all_w, all_images)):
                 #image_pil = PIL.Image.fromarray(image, 'RGB')
