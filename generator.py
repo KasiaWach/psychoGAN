@@ -65,7 +65,7 @@ class generator():
 
         image_pil.thumbnail((256,256))
         image_pil.save(
-        self.dir["thumbnails"] / '{}{}cond{}.png'.format(face_no, self.direction_name,condition))
+        self.dir["thumbnails"] / '{}{}cond{}.jpg'.format(face_no, self.direction_name,condition),format='JPEG')
 
 
 
