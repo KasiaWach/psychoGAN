@@ -12,9 +12,8 @@ from pathlib import Path
 from pretrained_networks import load_networks
 
 class generator():
-    def __init__(self, network_pkl_path,direction_path,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir):
-        self.direction_path = direction_path    # Ścieżka do wektora cechy
-        self.direction = np.load(direction_path)# Wgrany wektor cechy
+    def __init__(self, network_pkl_path,direction_name,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir,generator_number):
+        self.no_generator = generator_number
         self.coefficient = coefficient          # Siła manipluacji / przemnożenie wektora
         self.truncation = truncation            # Parametr stylegan "jak różnorodne twarze"
         self.n_levels = n_levels                # liczba poziomów manipulacji 1-3
@@ -23,9 +22,14 @@ class generator():
         self.preview_3faces = np.array([])      # Array z koordynatami twarzy na podglądzie 3
         self.synthesis_kwargs = {}              # Keyword arguments które przyjmuje stylegan
         self.type_of_preview = type_of_preview  # Typ podglądu, wartości: "3_faces", "manipulation" w zależności od tego które ustawienia są zmieniane
-        self.dir = {"results":      Path(result_dir),
-                    "images":       Path(result_dir) / 'images',
-                    "coordinates":  Path(result_dir) / 'coordinates'}
+        self.dir = {"results":          Path(result_dir+str(self.no_generator)),
+                    "images":           Path(result_dir+str(self.no_generator)) / 'images',
+                    "thumbnails":       Path(result_dir+str(self.no_generator)) / 'thumbnails',
+                    "coordinates":      Path(result_dir+str(self.no_generator)) / 'coordinates',
+                    "dominance":        Path("stylegan2/stylegan2directions/dominance.npy"),
+                    "trustworthiness":  Path("stylegan2/stylegan2directions/trustworthiness.npy")}
+        self.direction_name = direction_name.lower()            # Wybrany wymiar
+        self.direction = np.load(self.dir["direction_name"])    # Wgrany wektor cechy
         for directory in self.dir.values():
             directory.mkdir(exist_ok=True, parents=True)
         self._G, self._D, self.Gs = load_networks(network_pkl_path)
@@ -46,11 +50,13 @@ class generator():
         else:
             self.preview_3faces = self.__create_coordinates(3)
 
-    def __save_image(self, face, face_no, condition):
-        pos_image_pil = PIL.Image.fromarray(face,  'RGB')  # Można pomyśleć nad funkcją zapisującą
-        # obrazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
-        pos_image_pil.save(
-            self.dir["images"] / '{}cond{}.png'.format(face_no, condition))
+    def __save_image(self, face, face_no, condition):   #Dodać kilka folderów wynikowych
+        image_pil = PIL.Image.fromarray(face,  'RGB')
+        image_pil.save(
+        self.dir["images"] / '{}{}cond{}.png'.format(face_no, self.dim,condition))
+        Image.thumbnail().save(
+        self.dir["thumbnails"] / '{}{}cond{}.png'.format(face_no, self.dim,condition))
+
 
 
     def generate(self):
@@ -80,8 +86,8 @@ class generator():
                     self.__save_image(pos_images[j])
                     #pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB') #Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
                     #pos_image_pil.save(
-                        #self.dir["images"]  / '{}cond{}.png'.format(i * minibatch_size +
-                                                       #j, self.coefficient))
+                            #self.dir["images"]  / '{}cond{}.png'.format(i * minibatch_size +
+                                                           #j, self.coefficient))
 
 
             for j, (dlatent, image) in enumerate(zip(all_w, all_images)):
