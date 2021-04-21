@@ -34,14 +34,9 @@ class generator():
             if directory.suffix == "": directory.mkdir(exist_ok=True, parents=True)
         self._G, self._D, self.Gs = load_networks(network_pkl_path)
 
-<<<<<<< HEAD
     def __get_direction_name(self): return self.direction_name
     def __set_dierction_name(self, direction_name): self.direction_name = direction_name.lower()
 
-=======
-
-    # Setter do direction,
->>>>>>> 9857964e32be3ee4c6de9c3ba5c333e74577e00a
     def refresh_preview(self):
         """Przełączniki co wywołać w zależności od wartości type_of_preview"""
         pass
