@@ -37,7 +37,9 @@ class generator():
     @property
     def direction_name(self): return self.direction_name
     @direction_name.setter
-    def direction_name(self, direction_name): self.direction_name = direction_name.lower()
+    def direction_name(self, direction_name):
+        self.direction_name = direction_name.lower()
+        self.direction = np.load(self.dir[self.direction_name])
 
     def refresh_preview(self):
         """Przełączniki co wywołać w zależności od wartości type_of_preview"""
