@@ -34,6 +34,8 @@ class generator():
             if directory.suffix == "": directory.mkdir(exist_ok=True, parents=True)
         self._G, self._D, self.Gs = load_networks(network_pkl_path)
 
+
+    # Setter do direction, 
     def refresh_preview(self):
         """Przełączniki co wywołać w zależności od wartości type_of_preview"""
         pass
