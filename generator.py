@@ -73,8 +73,8 @@ class generator():
                 neg_w = all_w.copy()
 
                 for j in range(len(all_w)):
-                    pos_w[j][0:8] = (pos_w[j] + self.coefficient * self.direction)[0:8]
-                    neg_w[j][0:8] = (neg_w[j] - self.coefficient * self.direction)[0:8]
+                    pos_w[j][0:8] = (pos_w[j] + k * self.direction)[0:8]
+                    neg_w[j][0:8] = (neg_w[j] - k * self.direction)[0:8]
 
                 pos_images = self.Gs.components.synthesis.run(pos_w,
                                                      **self.synthesis_kwargs)
@@ -87,12 +87,12 @@ class generator():
                     #pos_image_pil = PIL.Image.fromarray(pos_images[j], 'RGB') #Można pomyśleć nad funkcją zapisującą obraazki która będzie miała możliwość zapisywania full jakości i miniaturkowej jakości
                     #pos_image_pil.save(
                         #self.dir["images"]  / '{}cond{}.png'.format(i * minibatch_size +
-                                                       j, self.coefficient))
+                                                       #j, self.coefficient))
 
                     #neg_image_pil = PIL.Image.fromarray(neg_images[j], 'RGB')
                     #neg_image_pil.save(
                         #self.dir["images"] / '{}cond{}.png'.format(i * minibatch_size +
-                                                        j, self.coefficient))
+                                                        #j, self.coefficient))
 
                 all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
 
