@@ -149,4 +149,4 @@ class generator():
             Gs_syn_kwargs.randomize_noise = False
             self.synthesis_kwargs = Gs_syn_kwargs
 
-        Gs_syn_kwargs.minibatch_size = minibatch_size
+        self.synthesis_kwargs.minibatch_size = minibatch_size
