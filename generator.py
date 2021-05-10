@@ -44,7 +44,10 @@ class generator():
 
     def refresh_preview(self):
         """Przełączniki co wywołać w zależności od wartości type_of_preview"""
-        pass
+        if self.type_of_preview == "manipulation":
+            return __generate_preview_face_manip()
+        else:
+            return __generate_preview_3faces()
 
     def __create_coordinates(self, n_photos):
         all_z = np.random.randn(n_photos, *self.Gs.input_shape[1:])
