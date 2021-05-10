@@ -15,7 +15,7 @@ def main():
                                result_dir="results", generator_number=1)
     main_generator.change_face()
     # Image.fromarray(main_generator._generator__generate_preview_face_manip(), "RGB").save('wynik.jpg', format='JPEG', subsampling=0, quality=50)
-    # main_generator.generate()
+    main_generator.generate()
 
 
 main()
