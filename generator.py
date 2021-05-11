@@ -98,7 +98,7 @@ class generator():
             for j, (dlatent) in enumerate(all_w):
                 np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
 
-    def __generate_preview_face_manip(self, model = self.Gs):
+    def __generate_preview_face_manip(self, model):
         """Zwraca array ze zdjeciem, sklejonymi 3 twarzami: w środku neutralna, po bokach zmanipulowana"""
         self.__set_synthesis_kwargs(minibatch_size=3)
         all_w = self.preview_face.copy()
@@ -113,7 +113,7 @@ class generator():
 
         return np.hstack(all_images)
 
-    def __generate_preview_3faces(self, model = self.Gs):
+    def __generate_preview_3faces(self, model):
         """__generate_preview_face_manip tylko że używa zmiennej preview_3faces zamiast preview_face"""
         self.__set_synthesis_kwargs(minibatch_size=3)
         all_w = self.preview_3faces.copy()
