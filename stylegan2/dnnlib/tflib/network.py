@@ -445,11 +445,11 @@ class Network:
                 dst[mb_begin: mb_end] = src
 
         # Done.
-        if print_progress:
-            print("\r%d / %d" % (num_items, num_items))
-
-        if not return_as_list:
-            out_arrays = out_arrays[0] if len(out_arrays) == 1 else tuple(out_arrays)
+        # if print_progress:
+        #     print("\r%d / %d" % (num_items, num_items))
+        #
+        # if not return_as_list:
+        #     out_arrays = out_arrays[0] if len(out_arrays) == 1 else tuple(out_arrays)
         return out_arrays
 
     def list_ops(self) -> List[TfExpression]:
