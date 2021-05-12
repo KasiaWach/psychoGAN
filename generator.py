@@ -32,7 +32,7 @@ class generator():
         self.direction = np.load(self.dir[self.__direction_name])    # Wgrany wektor cechy
         for directory in self.dir.values():
             if directory.suffix == "": directory.mkdir(exist_ok=True, parents=True)
-        self._G, self._D, self.Gs = load_networks(network_pkl_path)
+        # self._G, self._D, self.Gs = load_networks(network_pkl_path)
 
     @property
     def direction_name(self): return self.__direction_name
