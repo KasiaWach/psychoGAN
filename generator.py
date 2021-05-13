@@ -18,7 +18,7 @@ class generator():
         self._truncation = truncation            # Parametr stylegan "jak różnorodne twarze"
         self.n_levels = n_levels                # liczba poziomów manipulacji 1-3
         self.n_photos = n_photos                # Ile zdjęć wygenerować
-        if type(network_pkl_path)=="str":
+        if type(network_pkl) is str:
             self._G, self._D, self.Gs = load_networks(network_pkl)
         else:
             self.Gs = network_pkl
