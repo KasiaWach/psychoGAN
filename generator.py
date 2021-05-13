@@ -12,12 +12,16 @@ from pathlib import Path
 from pretrained_networks import load_networks
 
 class generator():
-    def __init__(self, network_pkl_path,direction_name,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir,generator_number=1):
+    def __init__(self, network_pkl,direction_name,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir,generator_number=1):
         self.no_generator = generator_number
         self.coefficient = coefficient          # Siła manipluacji / przemnożenie wektora
         self._truncation = truncation            # Parametr stylegan "jak różnorodne twarze"
         self.n_levels = n_levels                # liczba poziomów manipulacji 1-3
         self.n_photos = n_photos                # Ile zdjęć wygenerować
+        if type(network_pkl_path)=="str":
+            self._G, self._D, self.Gs = load_networks(network_pkl)
+        else:
+            self.Gs = network_pkl
         self.preview_face = self.__create_coordinates(1)       # Array z koordynatami twarzy na podglądzie 1
         self.preview_3faces = self.__create_coordinates(3)      # Array z koordynatami twarzy na podglądzie 3
         self.synthesis_kwargs = {}              # Keyword arguments które przyjmuje stylegan
@@ -36,7 +40,6 @@ class generator():
 
         for directory in self.dir.values():
             if directory.suffix == "": directory.mkdir(exist_ok=True, parents=True)
-        # self._G, self._D, self.Gs = load_networks(network_pkl_path)
 
 
     @property
