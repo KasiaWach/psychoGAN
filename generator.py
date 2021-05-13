@@ -15,7 +15,7 @@ class generator():
     def __init__(self, network_pkl_path,direction_name,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir,generator_number=1):
         self.no_generator = generator_number
         self.coefficient = coefficient          # Siła manipluacji / przemnożenie wektora
-        self.truncation = truncation            # Parametr stylegan "jak różnorodne twarze"
+        self._truncation = truncation            # Parametr stylegan "jak różnorodne twarze"
         self.n_levels = n_levels                # liczba poziomów manipulacji 1-3
         self.n_photos = n_photos                # Ile zdjęć wygenerować
         self.preview_face = np.array([])        # Array z koordynatami twarzy na podglądzie 1
@@ -37,6 +37,21 @@ class generator():
         for directory in self.dir.values():
             if directory.suffix == "": directory.mkdir(exist_ok=True, parents=True)
         # self._G, self._D, self.Gs = load_networks(network_pkl_path)
+
+
+    @property
+    def truncation(self): return self._truncation
+    @truncation.setter
+    def truncation(self, truncation):
+        w_avg = self.Gs.get_var('dlatent_avg')
+        f =  w_avg + (self.preview_face - w_avg) / self.truncation
+        self.preview_face = w_avg + (f - w_avg) * truncation
+        f =  w_avg + (self.preview_3faces - w_avg) / self.truncation
+        self.preview_3faces = w_avg + (f - w_avg) * truncation
+        self.preview_face = w_avg + (self.preview_face - w_avg) * truncation
+        self.preview_3faces = w_avg + (self.preview_3faces - w_avg) * truncation
+        self._truncation = truncation
+
 
     @property
     def direction_name(self): return self.__direction_name
