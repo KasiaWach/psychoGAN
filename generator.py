@@ -29,7 +29,11 @@ class generator():
                     "dominance":        Path("stylegan2/stylegan2directions/dominance.npy"),
                     "trustworthiness":  Path("stylegan2/stylegan2directions/trustworthiness.npy")}
         self.__direction_name = direction_name.lower()            # Wybrany wymiar
-        self.direction = np.load(self.dir[self.__direction_name])    # Wgrany wektor cechy
+        try:
+          self.direction = np.load(self.dir[self.__direction_name])    # Wgrany wektor cechy
+        except:
+          self.direction = np.load(direction_name)
+
         for directory in self.dir.values():
             if directory.suffix == "": directory.mkdir(exist_ok=True, parents=True)
         # self._G, self._D, self.Gs = load_networks(network_pkl_path)
@@ -39,15 +43,18 @@ class generator():
     @direction_name.setter
     def direction_name(self, direction_name):
         self.__direction_name = direction_name.lower()
-        self.direction = np.load(self.dir[self.__direction_name])
+        try:            # Wybrany wymiar
+          self.direction = np.load(self.dir[self.__direction_name])    # Wgrany wektor cechy
+        except:
+          self.direction = np.load(direction_name)
 
 
     def refresh_preview(self):
         """Przełączniki co wywołać w zależności od wartości type_of_preview"""
         if self.type_of_preview == "manipulation":
-            return __generate_preview_face_manip()
+            return self.__generate_preview_face_manip()
         else:
-            return __generate_preview_3faces()
+            return self.__generate_preview_3faces()
 
     def __create_coordinates(self, n_photos):
         all_z = np.random.randn(n_photos, *self.Gs.input_shape[1:])
@@ -98,7 +105,7 @@ class generator():
             for j, (dlatent) in enumerate(all_w):
                 np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
 
-    def __generate_preview_face_manip(self, model):
+    def __generate_preview_face_manip(self):
         """Zwraca array ze zdjeciem, sklejonymi 3 twarzami: w środku neutralna, po bokach zmanipulowana"""
         self.__set_synthesis_kwargs(minibatch_size=3)
         all_w = self.preview_face.copy()
@@ -109,16 +116,16 @@ class generator():
         all_w[0][0:8] = (all_w[0] - self.coefficient * self.direction)[0:8]
         all_w[2][0:8] = (all_w[2] + self.coefficient * self.direction)[0:8]
 
-        all_images = model.components.synthesis.run(all_w, **self.synthesis_kwargs)
+        all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
 
         return np.hstack(all_images)
 
-    def __generate_preview_3faces(self, model):
+    def __generate_preview_3faces(self):
         """__generate_preview_face_manip tylko że używa zmiennej preview_3faces zamiast preview_face"""
         self.__set_synthesis_kwargs(minibatch_size=3)
         all_w = self.preview_3faces.copy()
 
-        all_images = model.components.synthesis.run(all_w, **self.synthesis_kwargs)
+        all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
 
         return np.hstack(all_images)
 
