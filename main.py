@@ -13,7 +13,7 @@ def main():
                                direction_name="Dominance", coefficient=1.5,
                                truncation=0.6, n_levels=3, n_photos=10, type_of_preview="manipulation",
                                result_dir="results", generator_number=1)
-    main_generator.change_face()
+    # main_generator.change_face()
     # Image.fromarray(main_generator._generator__generate_preview_face_manip(), "RGB").save('wynik.jpg', format='JPEG', subsampling=0, quality=50)
     # main_generator.generate()
 
