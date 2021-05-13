@@ -18,8 +18,8 @@ class generator():
         self._truncation = truncation            # Parametr stylegan "jak różnorodne twarze"
         self.n_levels = n_levels                # liczba poziomów manipulacji 1-3
         self.n_photos = n_photos                # Ile zdjęć wygenerować
-        self.preview_face = np.array([])        # Array z koordynatami twarzy na podglądzie 1
-        self.preview_3faces = np.array([])      # Array z koordynatami twarzy na podglądzie 3
+        self.preview_face = self.__create_coordinates(1)       # Array z koordynatami twarzy na podglądzie 1
+        self.preview_3faces = self.__create_coordinates(3)      # Array z koordynatami twarzy na podglądzie 3
         self.synthesis_kwargs = {}              # Keyword arguments które przyjmuje stylegan
         self.type_of_preview = type_of_preview  # Typ podglądu, wartości: "3_faces", "manipulation" w zależności od tego które ustawienia są zmieniane
         self.dir = {"results":          Path(result_dir+str(self.no_generator)),
