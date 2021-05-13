@@ -12,7 +12,7 @@ from pathlib import Path
 from pretrained_networks import load_networks
 
 class generator():
-    def __init__(self, network_pkl,direction_name,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir,generator_number=1):
+    def __init__(self, network_pkl, direction_name,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir,generator_number=1):
         self.no_generator = generator_number
         self.coefficient = coefficient          # Siła manipluacji / przemnożenie wektora
         self._truncation = truncation            # Parametr stylegan "jak różnorodne twarze"
@@ -47,12 +47,10 @@ class generator():
     @truncation.setter
     def truncation(self, truncation):
         w_avg = self.Gs.get_var('dlatent_avg')
-        f =  w_avg + (self.preview_face - w_avg) / self.truncation
-        self.preview_face = w_avg + (f - w_avg) * truncation
-        f =  w_avg + (self.preview_3faces - w_avg) / self.truncation
-        self.preview_3faces = w_avg + (f - w_avg) * truncation
-        self.preview_face = w_avg + (self.preview_face - w_avg) * truncation
-        self.preview_3faces = w_avg + (self.preview_3faces - w_avg) * truncation
+        f =  (self.preview_face - w_avg) / self.truncation
+        self.preview_face = w_avg + (f) * truncation
+        f = (self.preview_3faces - w_avg) / self.truncation
+        self.preview_3faces = w_avg + (f) * truncation
         self._truncation = truncation
 
 
