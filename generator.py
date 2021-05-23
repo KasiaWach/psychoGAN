@@ -95,32 +95,31 @@ class generator():
 
 
 
-    def generate(self, i=0):
-        """Zapisuje wyniki"""
+    def generate(self):
+        """Zapisuje wyniki, na razie n_levels=1 """
         minibatch_size = 8
 
-        if self.minibatch_size!=8:
-            self.__set_synthesis_kwargs(minibatch_size)
+        self.__set_synthesis_kwargs(minibatch_size)
 
         coeffs = [i/self.n_levels*self.coefficient for i in range(-self.n_levels, self.n_levels)]
 
-        # for i in range(self.n_photos // minibatch_size +1):
-        all_w = self.__create_coordinates(minibatch_size)
+        for i in range(self.n_photos // minibatch_size +1): # dodajmy ładowanie w interfejsie
+            all_w = self.__create_coordinates(minibatch_size)
 
-        for k, coeff in enumerate(coeffs):
-            manip_w = all_w.copy()
+            for k, coeff in enumerate(coeffs):
+                manip_w = all_w.copy()
 
-            for j in range(len(all_w)):
-                manip_w[j][0:8] = (manip_w[j] + coeff * self.direction)[0:8]
+                for j in range(len(all_w)):
+                    manip_w[j][0:8] = (manip_w[j] + coeff * self.direction)[0:8]
 
-            manip_images = self.Gs.components.synthesis.run(manip_w, **self.synthesis_kwargs)
+                manip_images = self.Gs.components.synthesis.run(manip_w, **self.synthesis_kwargs)
 
-            for j in range(len(all_w)):
-                if i*minibatch_size + j < self.n_photos:
-                    self.__save_image(manip_images[j],i*minibatch_size+j, k)
+                for j in range(len(all_w)):
+                    if i*minibatch_size + j < self.n_photos:
+                        self.__save_image(manip_images[j],i*minibatch_size+j, k)
 
-        for j, (dlatent) in enumerate(all_w):
-            np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
+            for j, (dlatent) in enumerate(all_w):
+                np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
 
     def __generate_preview_face_manip(self):
         """Zwraca array ze zdjeciem, sklejonymi 3 twarzami: w środku neutralna, po bokach zmanipulowana"""
