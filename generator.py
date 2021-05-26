@@ -54,6 +54,7 @@ class generator():
         self.preview_3faces = w_avg + (f) * truncation
         self._truncation = truncation
 
+    # w_avg + (faces_w - w_avg) * self.truncation
 
     @property
     def direction_name(self): return self.__direction_name
