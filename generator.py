@@ -10,7 +10,6 @@ import imageio
 import matplotlib.pyplot as plt
 from pathlib import Path
 from pretrained_networks import load_networks
-from rq import get_current_job
 
 class generator():
     def __init__(self, network_pkl, direction_name,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir,generator_number=1):
@@ -105,11 +104,6 @@ class generator():
 
         coeffs = [i/self.n_levels*self.coefficient for i in range(-self.n_levels, self.n_levels)]
 
-        # Store completion percentage in redis under the process id
-        job = get_current_job()
-        job.meta["progress"] = 0
-        job.save_meta()
-
         for i in range(self.n_photos // minibatch_size +1): # dodajmy ładowanie w interfejsie
             all_w = self.__create_coordinates(minibatch_size)
 
@@ -128,9 +122,6 @@ class generator():
             for j, (dlatent) in enumerate(all_w):
                 np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
 
-            # update completion percentage so it's available from front-end
-            job.meta["progress"] = 100 * (i + 1) // (self.n_photos // minibatch_size +1)
-            job.save_meta()
 
     def __generate_preview_face_manip(self):
         """Zwraca array ze zdjeciem, sklejonymi 3 twarzami: w środku neutralna, po bokach zmanipulowana"""
