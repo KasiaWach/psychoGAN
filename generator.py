@@ -123,7 +123,7 @@ class generator():
             for j, (dlatent) in enumerate(all_w):
                 np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
 
-        shutil.make_archive('face_genetion_results', 'zip', root_dir='')
+        shutil.make_archive('face_genetion_results', 'zip', root_dir=Path(result_dir+str(self.no_generator)))
 
 
     def __generate_preview_face_manip(self):
