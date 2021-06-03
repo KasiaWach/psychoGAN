@@ -10,7 +10,9 @@ import imageio
 import matplotlib.pyplot as plt
 from pathlib import Path
 from pretrained_networks import load_networks
-import shutil
+from zipfile import ZipFile
+import os
+from os.path import basename
 
 class generator():
     def __init__(self, network_pkl, direction_name,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir,generator_number=1):
@@ -123,7 +125,11 @@ class generator():
             for j, (dlatent) in enumerate(all_w):
                 np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
 
-        shutil.make_archive('face_genetion_results', 'zip', root_dir=Path(result_dir+str(self.no_generator)))
+        with ZipFile('face_genetion_results.zip', 'w') as zipObj:
+            for folderName, subfolders, filenames in os.walk(dirName):
+                for filename in filenames:
+                    filePath = os.path.join(folderName, filename)
+                    zipObj.write(filePath, basename(filePath))
 
 
     def __generate_preview_face_manip(self):
