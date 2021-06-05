@@ -12,7 +12,6 @@ from pathlib import Path
 from pretrained_networks import load_networks
 from zipfile import ZipFile
 import os
-from os.path import basename
 
 class generator():
     def __init__(self, network_pkl, direction_name,coefficient,truncation,n_levels,n_photos,type_of_preview,result_dir,generator_number=1):
@@ -127,11 +126,10 @@ class generator():
                 np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
 
         with ZipFile('face_genetion_results.zip', 'w') as zipObj:
-            for folderName, subfolders, filenames in os.walk(self.dir["results"]):
+            for folderName, subfolders, filenames in os.walk(df["generators"][0].dir["results"]):
                 for filename in filenames:
                     filePath = os.path.join(folderName, filename)
-                    zipObj.write(filePath, basename(filePath))
-
+                    zipObj.write(filePath, filePath)
 
     def __generate_preview_face_manip(self):
         """Zwraca array ze zdjeciem, sklejonymi 3 twarzami: w środku neutralna, po bokach zmanipulowana"""
