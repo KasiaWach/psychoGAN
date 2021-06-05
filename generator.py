@@ -66,7 +66,7 @@ class generator():
           self.__direction_name = direction_name.lower()
         except:
           self.direction = np.load(direction_name)
-          self.__direction_name = direction_name.split("/")[:-1].replace(".npy",'')
+          self.__direction_name = direction_name.split("/")[-1].replace(".npy",'')
 
 
     def refresh_preview(self):
