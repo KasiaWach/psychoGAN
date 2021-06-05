@@ -125,7 +125,7 @@ class generator():
             for j, (dlatent) in enumerate(all_w):
                 np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
 
-        with ZipFile('face_genetion_results.zip', 'w') as zipObj:
+        with ZipFile('face_generation_results.zip', 'w') as zipObj:
             for folderName, subfolders, filenames in os.walk(self.dir["results"]):
                 for filename in filenames:
                     filePath = os.path.join(folderName, filename)
