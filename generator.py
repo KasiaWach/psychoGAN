@@ -62,11 +62,12 @@ class generator():
     def direction_name(self): return self.__direction_name
     @direction_name.setter
     def direction_name(self, direction_name):
-        self.__direction_name = direction_name.lower()
         try:            # Wybrany wymiar
           self.direction = np.load(self.dir[self.__direction_name])    # Wgrany wektor cechy
+          self.__direction_name = direction_name.lower()
         except:
           self.direction = np.load(direction_name)
+          self.__direction_name = direction_name.split("/")[:-1].replace(".npy",'')
 
 
     def refresh_preview(self):
@@ -126,7 +127,7 @@ class generator():
                 np.save(self.dir["coordinates"] / (str(i * minibatch_size + j) + '.npy'), dlatent[0])
 
         with ZipFile('face_genetion_results.zip', 'w') as zipObj:
-            for folderName, subfolders, filenames in os.walk(results1):
+            for folderName, subfolders, filenames in os.walk(self.dir["results"]):
                 for filename in filenames:
                     filePath = os.path.join(folderName, filename)
                     zipObj.write(filePath, basename(filePath))
