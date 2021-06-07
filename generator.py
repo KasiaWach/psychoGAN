@@ -63,7 +63,7 @@ class generator():
     def direction_name(self, direction_name):
         try:            # Wybrany wymiar
           self.direction = np.load(self.dir[self.__direction_name])    # Wgrany wektor cechy
-          self.__direction_name = direction_name.lower()
+          self.__direction_name = direction_name.split("/")[-1].replace(".npy",'')
         except:
           self.direction = np.load(direction_name)
           self.__direction_name = direction_name.split("/")[-1].replace(".npy",'')
