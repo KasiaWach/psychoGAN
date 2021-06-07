@@ -105,7 +105,7 @@ class generator():
 
         self.__set_synthesis_kwargs(minibatch_size)
 
-        coeffs = [i/self.n_levels*self.coefficient for i in range(-self.n_levels, self.n_levels+1)]
+        coeffs = [i/self.n_levels*self.coefficient if self.n_levels> 0 else i for i in range(-self.n_levels, self.n_levels+1)]
 
         for i in range(self.n_photos // minibatch_size +1): # dodajmy ładowanie w interfejsie
             all_w = self.__create_coordinates(minibatch_size)
