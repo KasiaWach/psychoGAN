@@ -114,7 +114,10 @@ class generator():
                 manip_w = all_w.copy()
 
                 for j in range(len(all_w)):
-                    manip_w[j][0:8] = (manip_w[j] + coeff * self.direction)[0:8]
+                    if self.direction_name.lower() != "age": 
+                        manip_w[j][0:8] = (manip_w[j] + coeff * self.direction)[0:8]
+                    else: 
+                        manip_w[j][:] = (manip_w[j] + coeff * self.direction)[:]
 
                 manip_images = self.Gs.components.synthesis.run(manip_w, **self.synthesis_kwargs)
 
