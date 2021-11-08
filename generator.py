@@ -117,7 +117,7 @@ class generator():
                     if not "age" in self.direction_name: 
                         manip_w[j][0:8] = (manip_w[j] + coeff * self.direction)[0:8]
                     else: 
-                        manip_w[j][:] = (manip_w[j] + 3* coeff * self.direction)[:]
+                        manip_w[j][:] = (manip_w[j] + coeff * self.direction)[:]
 
                 manip_images = self.Gs.components.synthesis.run(manip_w, **self.synthesis_kwargs)
 
@@ -142,8 +142,13 @@ class generator():
         all_w = np.array([all_w[0],all_w[0],all_w[0]])  # Przygotowujemy miejsca na twarze zmanipulowane
 
         # Przesunięcie twarzy o wektor (już rozwinięty w 18)
-        all_w[0][0:8] = (all_w[0] - self.coefficient * self.direction)[0:8]
-        all_w[2][0:8] = (all_w[2] + self.coefficient * self.direction)[0:8]
+        if not "age" in self.direction_name: 
+            all_w[0][0:8] = (all_w[0] - self.coefficient * self.direction)[0:8]
+            all_w[2][0:8] = (all_w[2] + self.coefficient * self.direction)[0:8]
+        else: 
+            all_w[0][:] = (all_w[0] - self.coefficient * self.direction)[:]
+            all_w[2][:] = (all_w[2] + self.coefficient * self.direction)[:]
+        
 
         all_images = self.Gs.components.synthesis.run(all_w, **self.synthesis_kwargs)
 
