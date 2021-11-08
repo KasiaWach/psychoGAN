@@ -114,7 +114,7 @@ class generator():
                 manip_w = all_w.copy()
 
                 for j in range(len(all_w)):
-                    if self.direction_name.lower() != "age": 
+                    if not "age" in self.direction_name: 
                         manip_w[j][0:8] = (manip_w[j] + coeff * self.direction)[0:8]
                     else: 
                         manip_w[j][:] = (manip_w[j] + coeff * self.direction)[:]
