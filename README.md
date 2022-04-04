@@ -1,2 +1,2 @@
 # psychoGAN
-Tutaj opisujemy rep
+An older version of PsychGAN
